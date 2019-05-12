@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yzy.heatmap.dao.CityMapper" >
+    <select id="getCityList" resultType="com.yzy.heatmap.po.City" parameterType="String">
+        select * from city_people where shiji like concat(#{city},'%')
+    </select>
+    <select id="getAll" resultType="com.yzy.heatmap.po.City" parameterType="String">
+        SELECT * FROM city_people
+    </select>
+    <select id="getAllByProvince" resultType="com.yzy.heatmap.po.City" parameterType="String">
+        SELECT * from city_people where province LIKE concat(#{city},'%')
+    </select>
+    <select id="fenShengRenkou" resultType="java.util.HashMap">
+        select province,sum(renkou) as renkou from city_people GROUP BY province
+    </select>
+    <select id="fenShiRenkouByProvince" resultType="java.util.HashMap" parameterType="String">
+        SELECT province,shiji,sum(renkou) as renkou FROM city_people where province = #{province} GROUP BY shiji
+    </select>
+    <select id="ZfenQuXianRenKou" resultType="java.util.HashMap" parameterType="String">
+        SELECT province,shiji,quxian,sum(renkou) as renkou FROM city_people where province = #{province} GROUP BY quxian
+    </select>
+    <select id="fenQuXianRenKou" resultType="java.util.HashMap" parameterType="String">
+        SELECT province,shiji,quxian,sum(renkou) as renkou FROM city_people where shiji = #{city} GROUP BY quxian
+    </select>
+    <select id="getAllRenKou" resultType="java.lang.Double">
+        select sum(renkou)as renkou from city_people;
+    </select>
+</mapper>

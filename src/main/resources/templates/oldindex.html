@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+body, html, #allmap {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	margin: 0;
+	font-family: "微软雅黑";
+}
+</style>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&amp;ak=OMGjSKF6dQFVGfISVkdlPOf9DL45DCQ9"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+<title>当月旅游密度</title>
+</head>
+<body>
+	<div id="allmap"></div>
+	<!--<li><a href="/demo">&nbsp;demo</a></li>-->
+</body>
+<script type="text/javascript">
+	//百度地图API功能
+	var map = new BMap.Map("allmap");
+	var point = new BMap.Point(116.331398, 39.897445);
+	map.centerAndZoom(point, 12);
+	map.enableScrollWheelZoom(); // 允许滚轮缩放
+
+	//根据IP来定位
+	function myFun(result) {
+		var cityName = result.name;
+		map.setCenter(cityName);
+	}
+	var myCity = new BMap.LocalCity();
+	myCity.get(myFun);
+
+	//打开热力图
+	//详细的参数,可以查看heatmap.js的文档 https://github.com/pa7/heatmap.js/blob/master/README.md
+	//参数说明如下:
+	/* visible 热力图是否显示,默认为true
+     * opacity 热力的透明度,1-100
+     * radius 势力图的每个点的半径大小
+     * gradient  {JSON} 热力图的渐变区间 . gradient如下所示
+     *	{
+			.2:'rgb(0, 255, 255)',
+			.5:'rgb(0, 110, 255)',
+			.8:'rgb(100, 0, 255)'
+		}
+		其中 key 表示插值的位置, 0~1.
+		    value 为颜色值.
+     */
+	heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":15});
+	map.addOverlay(heatmapOverlay);
+
+	//获取热力数据
+	$.ajax({
+        type: "GET",
+        url: "renkou",
+        data: {},
+        dataType: "json",
+        success: function(data){
+                console.log(data);
+        	heatmapOverlay.setDataSet({data:data['list'],max:100});
+        }
+	});
+
+</script>
+
+<!--<script type="text/javascript">-->
+
+    <!--// 定义一个控件类,即function-->
+    <!--function ZoomControl(){-->
+        <!--// 默认停靠位置和偏移量-->
+        <!--this.defaultAnchor = BMAP_ANCHOR_TOP_LEFT;-->
+        <!--this.defaultOffset = new BMap.Size(10, 10);-->
+    <!--}-->
+
+    <!--// 通过JavaScript的prototype属性继承于BMap.Control-->
+    <!--ZoomControl.prototype = new BMap.Control();-->
+
+    <!--// 自定义控件必须实现自己的initialize方法,并且将控件的DOM元素返回-->
+    <!--// 在本方法中创建个div元素作为控件的容器,并将其添加到地图容器中-->
+    <!--ZoomControl.prototype.initialize = function(map){-->
+        <!--// 创建一个DOM元素-->
+        <!--var div = document.createElement("div");-->
+        <!--// 添加文字说明-->
+        <!--div.appendChild(document.createTextNode("放大2级"));-->
+        <!--// 设置样式-->
+        <!--div.style.cursor = "pointer";-->
+        <!--div.style.border = "1px solid gray";-->
+        <!--div.style.backgroundColor = "white";-->
+        <!--// 绑定事件,点击一次放大两级-->
+        <!--div.onclick = function(e){-->
+            <!--$.ajax({-->
+                <!--type: "GET",-->
+                <!--url: "/hello",-->
+                <!--data: {},-->
+                <!--dataType: "json",-->
+                <!--success: function(data){-->
+                    <!--console.log(data)-->
+                    <!--window.location.href="demo.html"//用于跳转页面-->
+                <!--}-->
+            <!--});-->
+        <!--}-->
+        <!--// 添加DOM元素到地图中-->
+        <!--map.getContainer().appendChild(div);-->
+        <!--// 将DOM元素返回-->
+        <!--return div;-->
+    <!--}-->
+    <!--// 创建控件-->
+    <!--var myZoomCtrl = new ZoomControl();-->
+    <!--// 添加到地图当中-->
+    <!--map.addControl(myZoomCtrl);-->
+<!--</script>-->
+</html>
+

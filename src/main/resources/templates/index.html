@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:http="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+
+        ul,li{list-style: none;margin:0;padding:0;float:left;}
+        html{height:100%}
+        body{height:100%;margin:0px;padding:0px;font-family:"微软雅黑";}
+        .up-map-div{
+            width:300px;
+            height:150px;
+            top:0px;
+            right:0px;
+            position:absolute;
+            z-index:9999;
+            border:1px solid blue;
+            background-color:#FFFFFF;
+        }
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&amp;ak=OMGjSKF6dQFVGfISVkdlPOf9DL45DCQ9"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+    <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../static/js/RangeSlider.js" th:src="@{/js/RangeSlider.js}"></script>
+    <link rel="stylesheet" src="../static/css/slider.css" th:src="@{/css/slider.css}"/>
+    <title>城市切换后加区域</title>
+</head>
+<body>
+<div id="allmap"></div>
+<div class="up-map-div">
+    <div id="r-result">
+        <!--输入省、直辖市或县名称：<input type="text" id="districtName" style="width:160px" value="北京市海淀区"/>-->
+        <input type="button" onclick="showBoundary()" value="获取轮廓线"/>
+        <input type="button" onclick="Clear()" value="清除轮廓线"/>
+        <br/>
+        <input type="button"  onclick="showHeatMap();" value="显示热力图"/><input type="button"  onclick="closeHeatmap();" value="关闭热力图"/>
+        <br/>
+        <input type="range" id="updateTextInput1" name="rangeInput" min="10" max="100" step='10' onchange="updateTextInput1(this.value);showHeatMap()"/>
+        <input type="text" id='a' style="width:20px" value='50' />值越小热度越高
+
+        <!--<input type="text" value="值越小视觉上热度越高"  title='最大值越小视觉上热度越高'/>-->
+        <br/>
+        <input type="range" name="rangeInput" min="0" max="50" onchange="updateTextInput(this.value);showHeatMap()"/>
+        <input type="text" id="r" value="15" style="width:20px"/>半径越小越零散
+        <br/>
+        <span id="renkouAmount"></span>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../static/js/index.js" th:src="@{/js/index.js}"></script>
+
+</html>
+
